@@ -1,0 +1,89 @@
+package Reactor;
+
+/*
+ * @(#)BezierAnim.java	1.6	98/12/03
+ *
+ * Copyright 1998 by Sun Microsystems, Inc.,
+ * 901 San Antonio Road, Palo Alto, California, 94303, U.S.A.
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information
+ * of Sun Microsystems, Inc. ("Confidential Information").  You
+ * shall not disclose such Confidential Information and shall use
+ * it only in accordance with the terms of the license agreement
+ * you entered into with Sun.
+ */
+
+
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.event.*;
+import javax.swing.JApplet;
+
+
+/**
+ * The BezierAnim class renders an animated Bezier Curve with the drawing
+ * style and paint and the filling paint selected by the user.
+ */
+public class BezierAnim extends JApplet {
+    
+   protected static final int widthscreen = 350; //ширина окна
+   protected static final int heightscreen = 600; //высота окна
+
+    static Demo demo;
+    public PowerScale pwrScl = new PowerScale();    
+    public Tvel tvel = new Tvel();
+        
+    public void init() {
+        getContentPane().add("Center",demo = new Demo(pwrScl,tvel));
+        getContentPane().add("North", pwrScl);
+        getContentPane().add("South", tvel);        
+        
+        demo.setFocusable(true);
+        demo.addKeyListener(new KeyAdapter() {
+
+            public void keyReleased(KeyEvent e) {
+                demo.keys(e);
+            }
+        });
+        demo.addMouseMotionListener(new MouseAdapter() {
+
+            public void mouseMoved (MouseEvent me) {
+                demo.mouse(me);
+            }
+        });
+        
+    }
+
+    public void start() {
+        demo.start();
+        
+    }
+
+    public void stop() {
+        demo.stop();
+
+    }
+    
+    public static void main(String argv[]) {
+
+        
+        final BezierAnim demo = new BezierAnim();
+        demo.init();
+        Frame f = new Frame("Reactor game");
+        f.setResizable(false);
+        f.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {System.exit(0);}
+            public void windowDeiconified(WindowEvent e) { demo.start(); }
+            public void windowIconified(WindowEvent e) { demo.stop(); }
+        });
+
+        //игра
+        f.add(demo);
+        f.pack();
+        f.setSize(new Dimension(widthscreen,heightscreen+135));
+        f.setVisible(true);
+        demo.start();
+        
+    }
+} // End BezierAnim class

@@ -1,0 +1,131 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Reactor;
+
+/**
+ *
+ * @author user
+ */
+public class BlueWaves {
+
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    private void creatmatrix() {
+
+        matrix = new int[width][height];//создаем матрицу по параметрам экрана
+        for (int x = 0; x < width; x++) {//инициализируем
+            for (int y = 0; y < height; y++) {
+                matrix[x][y] = 0;
+            }
+        }
+    }
+
+    public int[][] getMatrix() {
+        fillmatrix();
+        return matrix;
+    }
+    
+    private int blue(int x,int y){
+        int b=0;
+        for (int i = 0; i < amountbp; i++) {
+            if ((x==bp[i].getX())&&(y==bp[i].getY())) {
+                b=255;
+            }
+        }
+        return b;
+    }
+    
+    private void fillmatrix() {
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                matrix[x][y] = blue(x,y);
+            }
+        }
+    }
+
+    private void creatbluepoints() {
+
+        for(int i=0;i<amountbp;i++){
+            bp[i]=new BluePoint(width, height);
+        }
+    }
+
+    public BlueWaves(int width,int height) {
+        setWidth(width);
+        setHeight(height);
+        range = (int) width / 2;
+        creatbluepoints();
+        creatmatrix();
+        fillmatrix();
+    }
+
+//поля класса BlueWaves    
+    private int[][] matrix;//матрица для хранения синей компоненты;
+    private int width=0;
+    private int height=0;
+    private int range=0;//область действия синей точки
+    private static final int amountbp=100;//количество синих точек
+    private BluePoint[] bp = new BluePoint[amountbp];//массив синих точек
+
+
+    private class BluePoint{
+
+        public void setMaxx(int maxx) {
+            this.maxx = maxx;
+        }
+
+        public void setMaxy(int maxy) {
+            this.maxy = maxy;
+        }
+
+        private void dirdefine(){
+            
+            if((x<1)|(x>width)) dx=-dx;
+            if((y<1)|(y>height)) dy=-dy;
+            
+        }
+        
+        public void step(){
+            dirdefine();
+            x=x+dx;
+            y=y+dy;
+            
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+        
+        public BluePoint(int width, int height) {
+            setMaxx(width);
+            setMaxy(height);
+            x=(int) (Math.random()*width);
+            y=(int) (Math.random()*height);            
+            step();
+            
+        }
+        
+        int x=0;
+        int y=0;
+        int dx=1;
+        int dy=1;
+        int maxx=0;
+        int maxy=0;
+    }
+//класс BluePoint    
+            
+}
